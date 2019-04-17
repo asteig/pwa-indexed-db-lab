@@ -273,7 +273,7 @@ var idbApp = (function() {
       var tx = db.transaction('orders', 'readonly');
       var store = tx.objectStore('orders');
       return store.openCursor();
-    }).then(function showOrders(cursor) {
+    }).then(function showOrder(cursor) {
       if(!cursor) {
         console.log('No cursor.');
         return;
@@ -284,7 +284,7 @@ var idbApp = (function() {
         s = `${s}${field}=${cursor.value[field]}<br/>`
       }
       s += '</p>';
-      return cursor.continue().then(showOrders);
+      return cursor.continue().then(showOrder);
     }).then(function() {
       if (s === '') {
         s = '<p>No results</p>'
