@@ -152,7 +152,56 @@ var idbApp = (function() {
 
   function getByPrice() {
 
+    var upper, lower, lowerNum, upperNum, range, s;
+
     // TODO 4.4a - use a cursor to get objects by price
+    lower = document.getElementById('priceLower').value;
+    upper = document.getElementById('priceUpper').value;
+    lowerNum = Number(lower);
+    upperNum = Number(upper);
+
+    if (lower === '' && upper === '') {
+      console.log('Both upper and lower are blank.');
+      return;
+    }
+
+    console.log('Find items priced ', lower, ' - ', upper);
+    
+    if(lower !== '' & upper !== '') {
+      range = IDBKeyRange.bound(lowerNum, upperNum);
+    } else if (lower === '') {
+      range = IDBKeyRange.upperBound(upperNum);
+    } else {
+      range = IDBKeyaRange.lowerBound(lowerNum);
+    }
+
+    s = '';
+
+    dbPromise.then(function(db) {
+      var tx = db.transaction('products', 'readonly');
+      var store = tx.objectStore('products');
+      var index = store.index('price');
+      return index.openCursor(range);
+    }).then(function showRange(cursor) {
+      if(!cursor) {
+        console.log('No cursor.');
+        return;
+      }
+      console.log('cursored at:', cursor.value.name);
+      s += `<h2>Price - ${cursor.value.price}</h2><p>`;
+      for (var field in cursor.value) {
+        s = `${s}${field}=${cursor.value[field]}<br/>`
+      }
+      s += '</p>';
+      return cursor.continue().then(showRange);
+    }).then(function() {
+      if (s === '') {
+        s = '<p>No results</p>'
+      }
+      document.getElementById('results').innerHTML = s;
+    });
+
+
 
   }
 
