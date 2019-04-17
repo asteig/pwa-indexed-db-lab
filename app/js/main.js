@@ -13,12 +13,87 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+var items = [
+  {
+    name: 'Couch',
+    id: 'cch-blk-ma',
+    price: 499.99,
+    color: 'black',
+    material: 'mahogany',
+    description: 'A very comfy couch',
+    quantity: 3
+  },
+  {
+    name: 'Armchair',
+    id: 'ac-gr-pin',
+    price: 299.99,
+    color: 'grey',
+    material: 'pine',
+    description: 'A plush recliner armchair',
+    quantity: 7
+  },
+  {
+    name: 'Stool',
+    id: 'st-re-pin',
+    price: 59.99,
+    color: 'red',
+    material: 'pine',
+    description: 'A light, high-stool',
+    quantity: 3
+  },
+  {
+    name: 'Chair',
+    id: 'ch-blu-pin',
+    price: 49.99,
+    color: 'blue',
+    material: 'pine',
+    description: 'A plain chair for the kitchen table',
+    quantity: 1
+  },
+  {
+    name: 'Dresser',
+    id: 'dr-wht-ply',
+    price: 399.99,
+    color: 'white',
+    material: 'plywood',
+    description: 'A plain dresser with five drawers',
+    quantity: 4
+  },
+  {
+    name: 'Cabinet',
+    id: 'ca-brn-ma',
+    price: 799.99,
+    color: 'brown',
+    material: 'mahogany',
+    description: 'An intricately-designed, antique cabinet',
+    quantity: 11
+  }
+];
+
 var idbApp = (function() {
   'use strict';
 
   // TODO 2 - check for support
 
-  var dbPromise;
+  var dbPromise = idb.open('couches-n-things', 4, function(upgradeDb) {
+    switch(upgradeDb.oldVersion) {
+      case 0:
+        //placeholder
+      case 2: 
+        console.log('Creating products store');
+        var productsStore = upgradeDb.createObjectStore('products', {keyPath: 'id'});
+        console.log('Creating product indexes');
+      case 3:
+        var prodNameIndex = productsStore.createIndex('name', 'name', {unique: true});
+        var prodPriceIndex = productsStore.createIndex('price', 'price');
+        var prodDescriptionIndex = productsStore.createIndex('description', 'description');
+
+        console.log('Creating orders store');
+        var ordersStore = upgradeDb.createObjectStore('objects', {keyPath: 'id'});
+        return 
+    }
+  });
 
   function addProducts() {
 
