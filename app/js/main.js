@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var items = [
+var products = [
   {
     name: 'Couch',
     id: 'cch-blk-ma',
@@ -91,19 +91,43 @@ var idbApp = (function() {
 
         console.log('Creating orders store');
         var ordersStore = upgradeDb.createObjectStore('objects', {keyPath: 'id'});
-        return 
     }
   });
 
   function addProducts() {
 
     // TODO 3.3 - add objects to the products store
+    console.log('Add the following products:');
+    console.log(products);
+
+    dbPromise.then(function(db) {
+      var tx = db.transaction('products', 'readwrite');
+      var store = tx.objectStore('products');
+
+      return Promise.all(products.map(function(item) {
+        console.log('Adding item...');
+        console.log(item);
+        return store.add(item);
+      })
+      ).catch(function(e) {
+        console.log('There was an error: ', e);
+      }).then(function() {
+        console.log('All products added successfully.');
+      });
+
+    });
 
   }
 
   function getByName(key) {
 
     // TODO 4.3 - use the get method to get an object by name
+    return dbPromise.then(function(db) {
+      var tx = db.transaction('products', 'readonly');
+      var store = tx.objectStore('products');
+      var index = store.index('name');
+      return index.get(key);
+    });
 
   }
 
